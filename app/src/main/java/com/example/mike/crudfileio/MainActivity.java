@@ -44,15 +44,6 @@ public class MainActivity extends AppCompatActivity {
         // Retrieving all the data from
         ArrayList<Profile> profiles;
         profiles = new Profile(this).getAll();
-        /*
-        try {
-            profiles = new Profile(this).getAll();
-        } catch (Exception e) {
-            Toast.makeText( this, "Failed to retrieve the data", Toast.LENGTH_SHORT ).show();
-            Log.d(TAG, "onCreate: "+e.getMessage());
-            return;
-        }
-        */
         ProfileAdapter profileAdapter = new ProfileAdapter(this, R.layout.list_item_activity_main, profiles);
         lv.setAdapter( profileAdapter );
     }

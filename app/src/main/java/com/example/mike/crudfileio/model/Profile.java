@@ -77,6 +77,7 @@ public class Profile {
 
     public long insert(){
         id = db.insert(this);
+        setId(id);
         idList.add(id);
         return id;
     }

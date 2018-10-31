@@ -50,11 +50,8 @@ public class ProfileAdapter extends ArrayAdapter {
         if (p != null) {
             ImageView im = v.findViewById(R.id.listItemProfilePhoto );
             TextView profileName = v.findViewById( R.id.listItemProfileName );
-            if ( im.getDrawable() == null ){
-                Log.d(TAG, "getView: DRAWABLE is NULL");
-            }
 
-            if ( im.getDrawable() != null ){
+            if ( im != null ){
                 im.setImageBitmap( p.getProfilePhoto() );
             }
             if ( profileName != null ){
