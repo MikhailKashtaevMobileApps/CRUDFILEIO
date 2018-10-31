@@ -15,13 +15,36 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     String TAG = "__TAG__";
+    private ListView lv;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        lv = findViewById( R.id.profileList );
 
+        try {
+            refresh();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onResume()  {
+        super.onResume();
+        try {
+            refresh();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void refresh() throws Exception{
         // Retrieving all the data from
         ArrayList<Profile> profiles;
+        profiles = new Profile(this).getAll();
+        /*
         try {
             profiles = new Profile(this).getAll();
         } catch (Exception e) {
@@ -29,16 +52,14 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "onCreate: "+e.getMessage());
             return;
         }
-
-        ListView lv = findViewById( R.id.profileList );
+        */
         ProfileAdapter profileAdapter = new ProfileAdapter(this, R.layout.list_item_activity_main, profiles);
         lv.setAdapter( profileAdapter );
-
     }
 
     public void addProfile(View view) {
         Intent intent = new Intent( getApplicationContext(), EditProfile.class );
-        intent.putExtra("profileID", 0);
+        intent.putExtra("profileID", new Long(0));
         startActivity(intent);
     }
 }

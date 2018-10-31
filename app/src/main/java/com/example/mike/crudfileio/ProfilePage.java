@@ -27,7 +27,16 @@ public class ProfilePage extends AppCompatActivity {
         profilePhoto = findViewById( R.id.profProfilePhoto );
 
         profileID = (Long) getIntent().getExtras().get("profileID");
+        refresh();
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refresh();
+    }
+
+    public void refresh(){
         try {
             Profile p = Profile.RetrieveById(this, profileID);
             profileName.setText( p.getName() );
@@ -35,8 +44,8 @@ public class ProfilePage extends AppCompatActivity {
 
         } catch (Exception e) {
             Toast.makeText( this, "Failed to retrieve with id="+String.valueOf(profileID)+", "+e.getMessage(), Toast.LENGTH_SHORT ).show();
+            finish();
         }
-
     }
 
     public void edit(View view) {

@@ -29,7 +29,7 @@ public class EditProfile extends AppCompatActivity {
         profileName = findViewById( R.id.profileName );
         Button btnDelete = findViewById( R.id.btnDelete );
 
-        profileID = new Long( (Integer) getIntent().getExtras().get("profileID"));
+        profileID = (Long) getIntent().getExtras().get("profileID");
 
         if ( profileID > 0 ){
             // Display delete button
@@ -69,15 +69,23 @@ public class EditProfile extends AppCompatActivity {
         String name = profileName.getText().toString();
 
         Profile profile = new Profile(this);
+        profile.setId(profileID);
         profile.setName(name);
         profile.setProfilePhoto(pic);
-        profile.insert();
+
+        if ( profileID ==0 ){
+            profile.insert();
+        }else{
+            profile.update();
+        }
+        finish();
     }
 
     public void delete(View view) throws Exception {
         if ( profileID > 0 ){
             Profile profile = Profile.RetrieveById(this, profileID);
             profile.delete();
+            finish();
         }
     }
 

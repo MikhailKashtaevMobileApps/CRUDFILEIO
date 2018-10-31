@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 
 import java.io.ByteArrayOutputStream;
@@ -94,7 +95,9 @@ public class Profile {
     }
 
     public int delete(){
-        return db.delete(id);
+        int res = db.delete(id);
+        idList.delete(id);
+        return res;
     }
 
     public int update(){
@@ -147,6 +150,7 @@ public class Profile {
         private Profile retrieveById( long id ) throws Exception {
             SQLiteDatabase database = getReadableDatabase();
             Cursor cursor = database.rawQuery( "SELECT "+
+                    "rowid, "+
                     SCHEMA.COL_NAME+" , "+
                     SCHEMA.COL_PHOTO+
                     " FROM "+
@@ -169,12 +173,12 @@ public class Profile {
             contentValues.put( SCHEMA.COL_NAME, profile.getName() );
             contentValues.put( SCHEMA.COL_PHOTO, profile.imgToBytes(profile.getProfilePhoto()) );
 
-            return database.update( SCHEMA.TABLE_NAME, contentValues, " WHERE ROWID="+String.valueOf(profile.id), null);
+            return database.update( SCHEMA.TABLE_NAME, contentValues, " ROWID="+String.valueOf(profile.id), null);
         }
 
         private int delete( long id ){
             SQLiteDatabase database = getWritableDatabase();
-            return database.delete( SCHEMA.TABLE_NAME, " WHERE ROWID="+String.valueOf(id), null );
+            return database.delete( SCHEMA.TABLE_NAME, " ROWID="+String.valueOf(id), null );
         }
     }
 
@@ -202,7 +206,9 @@ public class Profile {
             ArrayList<Long> ar = new ArrayList<>();
             String ids[] = get().split(",");
             for (String s : ids) {
-                ar.add( Long.valueOf(s) );
+                if (!s.trim().equals("")){
+                    ar.add( Long.valueOf(s) );
+                }
             }
             return ar;
         }
@@ -216,7 +222,9 @@ public class Profile {
                 ids += String.valueOf(aLong)+" ";
             }
             ids.trim();
-            ids.replace(" ", ",");
+            ids.replaceAll(" ", ",");
+
+            Log.d("DELETING FROM LISTIDS", "delete: newIDS="+ids);
             put(ids);
         }
 
