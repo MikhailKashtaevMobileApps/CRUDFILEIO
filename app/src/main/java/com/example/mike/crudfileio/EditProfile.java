@@ -84,6 +84,7 @@ public class EditProfile extends AppCompatActivity {
     public void delete(View view) throws Exception {
         if ( profileID > 0 ){
             Profile profile = Profile.RetrieveById(this, profileID);
+            profile.setId(profileID);
             profile.delete();
             finish();
         }
