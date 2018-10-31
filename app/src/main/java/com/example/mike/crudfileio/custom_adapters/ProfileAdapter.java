@@ -2,19 +2,28 @@ package com.example.mike.crudfileio.custom_adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.example.mike.crudfileio.ProfilePage;
+import com.example.mike.crudfileio.R;
 import com.example.mike.crudfileio.model.Profile;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
 
 public class ProfileAdapter extends ArrayAdapter {
 
+    String TAG = "__TAG__";
     private final int resourceLayout;
     private final Context context;
 
@@ -23,7 +32,7 @@ public class ProfileAdapter extends ArrayAdapter {
         resourceLayout = resource;
         this.context = context;
     }
-/*
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = convertView;
@@ -36,25 +45,41 @@ public class ProfileAdapter extends ArrayAdapter {
 
         Profile p = (Profile) getItem(position);
 
+        Log.d(TAG, "getView: "+p.toString());
+
         if (p != null) {
-            ImageView im = (ImageView) v.findViewById(R.id.profilePhoto );
-            TextView tt2 = (TextView) v.findViewById(R.id.categoryId);
-            TextView tt3 = (TextView) v.findViewById(R.id.description);
+            ImageView im = v.findViewById(R.id.listItemProfilePhoto );
+            TextView profileName = v.findViewById( R.id.listItemProfileName );
 
-            if (tt1 != null) {
-                tt1.setText(p.getId());
+            if ( im.getDrawable() != null ){
+                im.setImageBitmap( p.getProfilePhoto() );
+            }
+            if ( profileName != null ){
+                profileName.setText( p.getName() );
             }
 
-            if (tt2 != null) {
-                tt2.setText(p.getCategory().getId());
+            class listViewClickListener implements View.OnClickListener{
+                Profile p;
+
+                public void setProfile(Profile p){
+                    this.p = p;
+                }
+
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent( context.getApplicationContext(), ProfilePage.class );
+                    intent.putExtra( "profileID", p.getId() );
+                    context.startActivity(intent);
+                }
             }
 
-            if (tt3 != null) {
-                tt3.setText(p.getDescription());
-            }
+            listViewClickListener lvl = new listViewClickListener();
+            lvl.setProfile(p);
+
+            v.setOnClickListener( lvl );
         }
 
         return v;
     }
-*/
+
 }

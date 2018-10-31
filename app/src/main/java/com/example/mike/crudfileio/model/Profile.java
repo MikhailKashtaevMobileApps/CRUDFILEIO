@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.provider.ContactsContract;
+import android.widget.ArrayAdapter;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -20,6 +21,15 @@ public class Profile {
     String name;
     long id;
     Database db;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     Context ctx;
     listOfIDS idList;
 
@@ -28,6 +38,14 @@ public class Profile {
         this.ctx = ctx;
         db = new Database(ctx);
         idList = new listOfIDS();
+    }
+
+    @Override
+    public String toString() {
+        return "Profile{" +
+                "name='" + name + '\'' +
+                ", id=" + id +
+                '}';
     }
 
     private byte[] imgToBytes(Bitmap img){
@@ -83,6 +101,14 @@ public class Profile {
         return db.update(this);
     }
 
+    public ArrayList<Profile> getAll() throws Exception {
+        ArrayList<Profile> res = new ArrayList<>();
+        for (Long aLong : idList.getAll()) {
+            res.add( Profile.RetrieveById( ctx, aLong ) );
+        }
+        return res;
+    }
+
     private class Database extends SQLiteOpenHelper {
 
         Context ctx;
@@ -125,11 +151,12 @@ public class Profile {
                     SCHEMA.COL_PHOTO+
                     " FROM "+
                     SCHEMA.TABLE_NAME+
-                    " WHERE id="+String.valueOf(id), null);
+                    " WHERE rowid="+String.valueOf(id), null);
             if ( cursor.moveToFirst() ){
                 Profile profile = new Profile(ctx);
                 profile.setName( cursor.getString(cursor.getColumnIndex(SCHEMA.COL_NAME)) );
                 profile.setProfilePhoto( bytesToImg(cursor.getBlob(cursor.getColumnIndex(SCHEMA.COL_PHOTO))) );
+                profile.setId( cursor.getLong( cursor.getColumnIndex("rowid") ) );
                 return profile;
             }
             throw new Exception("Failed to retrieve Profile by ID");
@@ -204,7 +231,8 @@ public class Profile {
     }
 
     private static class SCHEMA {
-        private static final String TABLE_NAME = "Profiles.db";
+        private static final String NAME = "Profiles.db";
+        private static final String TABLE_NAME = "Profiles";
 
         private static final String COL_NAME = "name";
         private static final String COL_PHOTO = "photo";

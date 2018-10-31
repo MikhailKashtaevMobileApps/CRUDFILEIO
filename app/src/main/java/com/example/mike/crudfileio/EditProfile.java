@@ -29,11 +29,21 @@ public class EditProfile extends AppCompatActivity {
         profileName = findViewById( R.id.profileName );
         Button btnDelete = findViewById( R.id.btnDelete );
 
-        profileID = (long) getIntent().getExtras().get("profileID");
+        profileID = new Long( (Integer) getIntent().getExtras().get("profileID"));
 
         if ( profileID > 0 ){
             // Display delete button
             btnDelete.setVisibility(Button.VISIBLE);
+
+            // Display all the current data
+            try {
+                Profile p = Profile.RetrieveById(this, profileID);
+                profileName.setText( p.getName() );
+                profilePhoto.setImageBitmap( p.getProfilePhoto() );
+
+            } catch (Exception e) {
+                Toast.makeText( this, "Failed to retrieve with id="+String.valueOf(profileID)+", "+e.getMessage(), Toast.LENGTH_SHORT ).show();
+            }
         }
     }
 

@@ -6,13 +6,13 @@
     android:onClick="displayProfile">
 
     <ImageView
-        android:id="@+id/profilePhoto"
+        android:id="@+id/listItemProfilePhoto"
         android:layout_width="100sp"
         android:layout_height="100sp" />
 
     <TextView
         android:layout_toEndOf="@id/profilePhoto"
-        android:id="@+id/profileName"
+        android:id="@+id/listItemProfileName"
         android:layout_width="wrap_content"
         android:layout_height="100sp"
         android:layout_marginLeft="25sp"
